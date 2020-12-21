@@ -140,7 +140,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-    if (_launchNotification != nil && _launchNotification[kGCMMessageIDKey]) {
+    if (_launchNotification != nil /*&& _launchNotification[kGCMMessageIDKey]*/) {
       [_channel invokeMethod:@"onLaunch" arguments:_launchNotification];
     }
     result(nil);
@@ -205,11 +205,11 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = notification.request.content.userInfo;
   // Check to key to ensure we only handle messages from Firebase
-  if (userInfo[kGCMMessageIDKey]) {
+  // if (userInfo[kGCMMessageIDKey]) {
     [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
     [_channel invokeMethod:@"onMessage" arguments:userInfo];
     completionHandler(UNNotificationPresentationOptionNone);
-  }
+  // }
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
@@ -217,10 +217,10 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
              withCompletionHandler:(void (^)(void))completionHandler NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = response.notification.request.content.userInfo;
   // Check to key to ensure we only handle messages from Firebase
-  if (userInfo[kGCMMessageIDKey]) {
+  // if (userInfo[kGCMMessageIDKey]) {
     [_channel invokeMethod:@"onResume" arguments:userInfo];
     completionHandler();
-  }
+  // }
 }
 
 #endif
